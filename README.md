@@ -1,0 +1,2 @@
+### ArganScript
+An interpreted language created using Java. Made by following tylerlaceby's [Building a Custom Scripting Language in TypeScript](https://www.youtube.com/playlist?list=PL_2VhOvlMk4UHGqYCLWc6GO8FaPl8fQTh).
