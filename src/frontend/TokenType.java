@@ -1,6 +1,10 @@
 package frontend;
 
 public enum TokenType {
+	// End of File
+	EOF,
+
+	Null,
 	Number,
 	Identifier,
 	Equals,
@@ -12,8 +16,7 @@ public enum TokenType {
 	BinaryOperator,
 	UnaryOperator,
 
+	// Keywords
 	Let,
-	Const,
-
-	EOF
+	Const
 }

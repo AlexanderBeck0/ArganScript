@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Lexer {
 	public static ArrayList<Token> tokenize(String sourceCode) {
@@ -24,7 +25,10 @@ public class Lexer {
 				tokens.add(token(src.removeFirst(), TokenType.Semicolon));
 			} else {
 				// Multi-character tokens
-				if (Lexer.isInt(src.getFirst())) {
+				if (Lexer.isSkippable(src.getFirst())) {
+					// Remove whitespaces
+					src.removeFirst();
+				} else if (Lexer.isInt(src.getFirst())) {
 					// Number token
 					StringBuilder num = new StringBuilder();
 					while (!src.isEmpty() && Lexer.isInt(src.getFirst())) {
@@ -38,23 +42,22 @@ public class Lexer {
 						identifier.append(src.removeFirst());
 					}
 
-					boolean reserved = Keywords.contains(identifier.toString());
-					if (!reserved) {
-						tokens.add(token(identifier.toString(), TokenType.Identifier));
-					} else {
+					if (Keywords.contains(identifier.toString())) {
 						// A reserved token
+						TokenType keywordType = Objects.requireNonNull(Keywords.get(identifier.toString()));
+						tokens.add(token(identifier.toString(), keywordType));
+					} else {
+						// A non-reserved token
 						tokens.add(token(identifier.toString(), TokenType.Identifier));
 					}
-				} else if (Lexer.isSkippable(src.getFirst())) {
-					// Remove whitespaces
-					src.removeFirst();
 				} else {
-					// TODO: This errors to the console, but doesn't exit so it is an infinite loop
 					System.err.println("Unrecognized character provided. Found: " + src.getFirst());
+					System.exit(1); // 1 has NO meaning in this case. Feel free to change it.
 				}
 			}
 		}
 
+		tokens.add(token("End Of File", TokenType.EOF));
 		return tokens;
 	}
 
