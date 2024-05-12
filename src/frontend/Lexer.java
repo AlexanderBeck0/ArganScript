@@ -55,6 +55,7 @@ public class Lexer {
 			}
 		}
 
+		tokens.add(token("End Of File", TokenType.EOF));
 		return tokens;
 	}
 
