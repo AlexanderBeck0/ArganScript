@@ -1,12 +1,14 @@
-import frontend.Lexer;
 import frontend.Parser;
-import runtime.Interpreter;
+import runtime.*;
 
 public static void main(String[] args) {
 	// Entry point of application
-	System.out.println(Lexer.tokenize("let x = 45"));
 	Parser parser = new Parser();
 	Interpreter interpreter = new Interpreter();
-	System.out.println(parser.produceAST("(4 + 5) * 3"));
-	System.out.println(interpreter.evaluate(parser.produceAST("(4 + 5) * 3")));
+	Environment root = new Environment();
+	root.declareVariable("x", new NumberValue(20.0));
+	root.declareVariable("null", new NullValue());
+	root.declareVariable("true", new BooleanValue(true));
+	root.declareVariable("false", new BooleanValue(false));
+	System.out.println(interpreter.evaluate(parser.produceAST("1 + true"), root));
 }

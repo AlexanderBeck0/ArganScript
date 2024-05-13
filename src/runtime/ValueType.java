@@ -2,5 +2,6 @@ package runtime;
 
 public enum ValueType {
 	Null,
-	Number
+	Number,
+	Boolean
 }

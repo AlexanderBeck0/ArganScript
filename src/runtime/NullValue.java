@@ -8,7 +8,7 @@ public class NullValue extends RuntimeValue {
 
 	public NullValue() {
 		super(type);
-		this.value = "null";
+		this.value = null;
 	}
 
 	public String value() {

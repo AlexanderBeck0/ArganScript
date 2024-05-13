@@ -1,16 +1,13 @@
 package runtime;
 
-import frontend.BinaryExpression;
-import frontend.NumericLiteral;
-import frontend.Program;
-import frontend.Statement;
+import frontend.*;
 import org.jetbrains.annotations.NotNull;
 
 public class Interpreter {
-	public RuntimeValue evaluate(Statement node) {
+	public RuntimeValue evaluate(Statement node, Environment env) {
 		switch (node.kind()) {
 			case Program -> {
-				return evaluateProgram((Program) node);
+				return evaluateProgram((Program) node, env);
 			}
 			case NumericLiteral -> {
 				return new NumberValue(((NumericLiteral) node).value());
@@ -19,7 +16,10 @@ public class Interpreter {
 				return new NullValue();
 			}
 			case BinaryExpression -> {
-				return evaluateBinaryExpression((BinaryExpression) node);
+				return evaluateBinaryExpression((BinaryExpression) node, env);
+			}
+			case Identifier -> {
+				return evaluateIdentifier((Identifier) node, env);
 			}
 			default -> {
 				System.err.println("This AST value has not been set up yet! AST value given: " + node.kind());
@@ -29,18 +29,22 @@ public class Interpreter {
 		return null;
 	}
 
-	private RuntimeValue evaluateProgram(Program program) {
+	/**
+	 * @param program The {@linkplain Program} to evaluate
+	 * @return The evaluated program
+	 */
+	private RuntimeValue evaluateProgram(@NotNull Program program, Environment env) {
 		RuntimeValue lastEvaluated = new NullValue();
 		for (Statement statement : program.body()) {
-			lastEvaluated = evaluate(statement);
+			lastEvaluated = evaluate(statement, env);
 		}
 
 		return lastEvaluated;
 	}
 
-	private RuntimeValue evaluateBinaryExpression(BinaryExpression binaryExpression) {
-		RuntimeValue left = evaluate(binaryExpression.left());
-		RuntimeValue right = evaluate(binaryExpression.right());
+	private RuntimeValue evaluateBinaryExpression(BinaryExpression binaryExpression, Environment env) {
+		RuntimeValue left = evaluate(binaryExpression.left(), env);
+		RuntimeValue right = evaluate(binaryExpression.right(), env);
 
 		if (left.type() == ValueType.Number && right.type() == ValueType.Number) {
 			return evaluateNumericBinaryExpression((NumberValue) left, (NumberValue) right, binaryExpression.operator());
@@ -79,4 +83,7 @@ public class Interpreter {
 		return new NumberValue(value);
 	}
 
+	private RuntimeValue evaluateIdentifier(Identifier identifier, Environment env) {
+		return env.lookupVariable(identifier.symbol());
+	}
 }

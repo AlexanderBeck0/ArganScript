@@ -12,7 +12,6 @@ public class Keywords {
 	static {
 		KEYWORDS.put("let", TokenType.Let);
 		KEYWORDS.put("const", TokenType.Const);
-		KEYWORDS.put("null", TokenType.Null);
 	}
 
 	/**

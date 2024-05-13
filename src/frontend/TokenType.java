@@ -4,7 +4,7 @@ public enum TokenType {
 	// End of File
 	EOF,
 
-	Null,
+	String,
 	Number,
 	Identifier,
 	Equals,

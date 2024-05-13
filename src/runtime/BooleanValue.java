@@ -1,17 +1,17 @@
-package frontend;
+package runtime;
 
 import java.util.Objects;
 
-public final class NullLiteral extends Expression {
-	private final static NodeType kind = NodeType.NullLiteral;
-	private final String value;
+public class BooleanValue extends RuntimeValue {
+	private final boolean value;
+	private final static ValueType type = ValueType.Boolean;
 
-	public NullLiteral() {
-		super(kind);
-		this.value = "null";
+	public BooleanValue(boolean value) {
+		super(type);
+		this.value = value;
 	}
 
-	public String value() {
+	public boolean value() {
 		return value;
 	}
 
@@ -19,7 +19,7 @@ public final class NullLiteral extends Expression {
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
 		if (obj == null || obj.getClass() != this.getClass()) return false;
-		var that = (NullLiteral) obj;
+		var that = (BooleanValue) obj;
 		return Objects.equals(this.value, that.value);
 	}
 
@@ -30,9 +30,8 @@ public final class NullLiteral extends Expression {
 
 	@Override
 	public String toString() {
-		return "NullLiteral[" +
+		return "BooleanValue[" +
 				"value=" + value + ']';
 	}
-
 
 }
