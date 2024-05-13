@@ -91,6 +91,10 @@ public class Parser {
 				expectType(TokenType.CloseParen, "Unexpected token found inside expression. Expected close parenthesis.");
 				return value;
 			}
+			case Null -> {
+				tokens.removeFirst();
+				return new NullLiteral();
+			}
 			default -> {
 				System.err.println("Unexpected Token found while parsing. Token found: " + token);
 				System.exit(1); //  1 has NO meaning in this case. Feel free to change it.
