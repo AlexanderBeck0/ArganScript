@@ -1,13 +1,13 @@
 package runtime.eval;
 
-import frontend.Program;
+import frontend.statement.Program;
 import frontend.Statement;
-import frontend.VariableDeclaration;
+import frontend.statement.VariableDeclaration;
 import org.jetbrains.annotations.NotNull;
 import runtime.Environment;
 import runtime.Interpreter;
-import runtime.NullValue;
-import runtime.RuntimeValue;
+import runtime.value.NullValue;
+import runtime.value.RuntimeValue;
 
 public class Statements {
 	private final Interpreter interpreter;

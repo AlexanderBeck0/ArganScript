@@ -17,12 +17,24 @@ public class Lexer {
 				tokens.add(token(src.removeFirst(), TokenType.OpenParen));
 			} else if (src.getFirst().equals(")")) {
 				tokens.add(token(src.removeFirst(), TokenType.CloseParen));
+			} else if (src.getFirst().equals("{")) {
+				tokens.add(token(src.removeFirst(), TokenType.OpenBrace));
+			} else if (src.getFirst().equals("}")) {
+				tokens.add(token(src.removeFirst(), TokenType.CloseBrace));
+			} else if (src.getFirst().equals("[")) {
+				tokens.add(token(src.removeFirst(), TokenType.OpenBracket));
+			} else if (src.getFirst().equals("]")) {
+				tokens.add(token(src.removeFirst(), TokenType.CloseBracket));
 			} else if (src.getFirst().equals("+") || src.getFirst().equals("-") || src.getFirst().equals("/") || src.getFirst().equals("*") || src.getFirst().equals("%")) {
 				tokens.add(token(src.removeFirst(), TokenType.BinaryOperator));
 			} else if (src.getFirst().equals("=")) {
 				tokens.add(token(src.removeFirst(), TokenType.Equals));
 			} else if (src.getFirst().equals(";")) {
 				tokens.add(token(src.removeFirst(), TokenType.Semicolon));
+			} else if (src.getFirst().equals(":")) {
+				tokens.add(token(src.removeFirst(), TokenType.Colon));
+			} else if (src.getFirst().equals(",")) {
+				tokens.add(token(src.removeFirst(), TokenType.Comma));
 			} else {
 				// Multi-character tokens
 				if (Lexer.isSkippable(src.getFirst())) {
@@ -121,6 +133,6 @@ public class Lexer {
 			// Only a single character should be getting passed
 			return false;
 		}
-		return src.equals(" ") || src.equals("\n") || src.equals("\t");
+		return src.equals(" ") || src.equals("\n") || src.equals("\t") || src.equals("\r");
 	}
 }

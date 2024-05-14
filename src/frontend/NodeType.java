@@ -1,13 +1,21 @@
 package frontend;
 
 public enum NodeType {
+	// Statements
 	Program,
-	NumericLiteral,
-	Identifier,
-	BinaryExpression,
+	VariableDeclaration,
+	FunctionDeclaration,
+
+	// Expressions
 	AssignmentExpression,
+	BinaryExpression,
 	CallExpression,
 	UnaryExpression,
-	FunctionDeclaration,
-	VariableDeclaration
+
+	// Literals
+	NumericLiteral,
+	Identifier,
+	Property,
+	ObjectLiteral
+
 }

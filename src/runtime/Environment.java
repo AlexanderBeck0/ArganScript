@@ -1,8 +1,15 @@
 package runtime;
 
+import runtime.value.BooleanValue;
+import runtime.value.NullValue;
+import runtime.value.RuntimeValue;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * To create the global environment, use <pre>{@code Environment root = Environment.createGlobalEnvironment();}</pre>
+ */
 public class Environment {
 	private final Environment parent;
 	private final HashMap<String, RuntimeValue> variables;
@@ -16,6 +23,15 @@ public class Environment {
 		this.parent = parent;
 		this.variables = new HashMap<>();
 		this.constants = new HashSet<>();
+	}
+
+	public static Environment createGlobalEnvironment() {
+		Environment env = new Environment();
+		env.declareVariable("null", new NullValue(), true);
+		env.declareVariable("true", new BooleanValue(true), true);
+		env.declareVariable("false", new BooleanValue(false), true);
+
+		return env;
 	}
 
 	/**
@@ -32,7 +48,7 @@ public class Environment {
 	public RuntimeValue declareVariable(String name, RuntimeValue value, boolean isConstant) {
 		// TODO: Add name regexp checking
 		if (this.variables.containsKey(name)) {
-			System.err.println("Variable" + name + " already exists!");
+			System.err.println("Variable '" + name + "' already exists!");
 			System.exit(1);
 		}
 		this.variables.put(name, value);
@@ -55,7 +71,7 @@ public class Environment {
 		Environment resolvedEnvironment = resolve(name);
 
 		if (resolvedEnvironment.constants.contains(name)) {
-			System.err.println("Cannot assign a value to constant " + name);
+			System.err.println("Cannot assign a value to constant '" + name + "'.");
 			System.exit(1);
 		}
 
@@ -93,7 +109,7 @@ public class Environment {
 			return this;
 		}
 		if (this.parent == null) {
-			System.err.println("Variable " + name + " does not exist!");
+			System.err.println("Variable '" + name + "' does not exist!");
 			System.exit(1);
 		}
 		return this.parent.resolve(name);

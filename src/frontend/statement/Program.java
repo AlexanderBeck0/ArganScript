@@ -1,4 +1,7 @@
-package frontend;
+package frontend.statement;
+
+import frontend.NodeType;
+import frontend.Statement;
 
 import java.util.ArrayList;
 import java.util.Objects;

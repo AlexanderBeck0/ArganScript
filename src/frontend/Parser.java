@@ -1,5 +1,14 @@
 package frontend;
 
+import frontend.expression.AssignmentExpression;
+import frontend.expression.BinaryExpression;
+import frontend.literal.Identifier;
+import frontend.literal.NumericLiteral;
+import frontend.literal.ObjectLiteral;
+import frontend.literal.Property;
+import frontend.statement.Program;
+import frontend.statement.VariableDeclaration;
+
 import java.util.ArrayList;
 
 /**
@@ -66,7 +75,7 @@ public class Parser {
 	}
 
 	private Expression parseAssignmentExpression() {
-		Expression left = parseAdditiveExpression();
+		Expression left = parseObjectExpression();
 
 		if (tokens.getFirst().type() == TokenType.Equals) {
 			tokens.removeFirst();
@@ -74,6 +83,38 @@ public class Parser {
 			return new AssignmentExpression(left, value);
 		}
 		return left;
+	}
+
+	private Expression parseObjectExpression() {
+		if (tokens.getFirst().type() != TokenType.OpenBrace) {
+			return parseAdditiveExpression();
+		}
+
+		tokens.removeFirst(); // Removes the OpenBrace
+		ArrayList<Property> properties = new ArrayList<>();
+
+		while (notEOF() && tokens.getFirst().type() != TokenType.CloseBrace) {
+			String key = expectType(TokenType.Identifier, "Object key expected, instead received " + tokens.getFirst()).value();
+			// { key1, key2} instead of {key1: val1}
+			if (tokens.getFirst().type() == TokenType.Comma) {
+				tokens.removeFirst();
+				properties.add(new Property(key));
+				continue;
+			} else if (tokens.getFirst().type() == TokenType.CloseBrace) {
+				properties.add(new Property(key));
+				continue;
+			}
+
+			expectType(TokenType.Colon, "Missing colon following key. Received " + tokens.getFirst());
+			Expression value = parseExpression();
+			properties.add(new Property(key, value));
+
+			if (tokens.getFirst().type() != TokenType.CloseBrace) {
+				expectType(TokenType.Comma, "Expected comma or closed brace following property. Received " + tokens.getFirst());
+			}
+		}
+		expectType(TokenType.CloseBrace, "Expected a close brace. Instead received " + tokens.getFirst());
+		return new ObjectLiteral(properties);
 	}
 
 	private Statement parseVariableDeclaration() {
@@ -88,7 +129,7 @@ public class Parser {
 			// Let x;
 			if (isConstant) {
 				// A constant value which is not initialized
-				System.err.println("Constant" + identifier + " must be contain a value!");
+				System.err.println("Constant '" + identifier + "' must be contain a value!");
 				System.exit(1);
 			}
 			// Initialize value to null
@@ -98,7 +139,7 @@ public class Parser {
 		// Get equals sign
 		expectType(TokenType.Equals, "Expected equals sign (=), instead found " + tokens.getFirst());
 
-		VariableDeclaration declaration = new VariableDeclaration(identifier, parseAdditiveExpression(), isConstant);
+		VariableDeclaration declaration = new VariableDeclaration(identifier, parseObjectExpression(), isConstant);
 		expectType(TokenType.Semicolon, "Expected semi-colon after variable declaration, received " + tokens.getFirst() + " instead.");
 		return declaration;
 	}
@@ -139,7 +180,7 @@ public class Parser {
 				return value;
 			}
 			default -> {
-				System.err.println("Unexpected Token found while parsing. Token found: " + token);
+				System.err.println("Unexpected Token found while parsing. Token found: " + tokens.getFirst());
 				System.exit(1); //  1 has NO meaning in this case. Feel free to change it.
 				return null; // It won't reach but this makes the compiler happy
 			}

@@ -7,11 +7,17 @@ public enum TokenType {
 	String,
 	Number,
 	Identifier,
+
 	Equals,
 	Semicolon,
-
+	Comma,
+	Colon,
 	OpenParen,
 	CloseParen,
+	OpenBrace, // {
+	CloseBrace, // }
+	OpenBracket, // [
+	CloseBracket, // ]
 
 	BinaryOperator,
 	UnaryOperator,
