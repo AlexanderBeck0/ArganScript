@@ -21,13 +21,13 @@ public class Environment {
 	/**
 	 * Declares a variable.
 	 *
-	 * @param name  The name of the variable
-	 * @param value The value of the variable
+	 * @param name       The name of the variable
+	 * @param value      The value of the variable
 	 * @param isConstant A boolean representing if the variable is a constant
 	 * @return The created variable
 	 * @implNote Does not check for {@code name} in any parent {@linkplain Environment Environments}
 	 * @see #assignVariable(String, RuntimeValue)
-	 * @see #lookupVariable(String) 
+	 * @see #lookupVariable(String)
 	 */
 	public RuntimeValue declareVariable(String name, RuntimeValue value, boolean isConstant) {
 		// TODO: Add name regexp checking
@@ -49,7 +49,7 @@ public class Environment {
 	 * @param value The value of the variable
 	 * @return The new variable value
 	 * @see #declareVariable(String, RuntimeValue, boolean)
-	 * @see #lookupVariable(String) 
+	 * @see #lookupVariable(String)
 	 */
 	public RuntimeValue assignVariable(String name, RuntimeValue value) {
 		Environment resolvedEnvironment = resolve(name);
@@ -66,10 +66,10 @@ public class Environment {
 	/**
 	 * Gets the variable {@code name}
 	 *
-	 * @param name  The name of the variable
+	 * @param name The name of the variable
 	 * @return {@code name}'s value, or null if it does not exist
 	 * @see #declareVariable(String, RuntimeValue, boolean)
-	 * @see #assignVariable(String, RuntimeValue) 
+	 * @see #assignVariable(String, RuntimeValue)
 	 */
 	public RuntimeValue lookupVariable(String name) {
 		Environment resolvedEnvironment = resolve(name);
