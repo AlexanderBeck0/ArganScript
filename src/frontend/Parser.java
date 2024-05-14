@@ -9,10 +9,10 @@ public class Parser {
 	private static ArrayList<Token> tokens;
 
 	/**
-	 * @implNote Advances {@link #tokens} by using {@code tokens.removeFirst()}
 	 * @param tokenType    The token type to expect
 	 * @param errorMessage The error message to show if there is no next token type or if the type is not the provdided type
 	 * @return The expected token of the given type, or the system exists.
+	 * @implNote Advances {@link #tokens} by using {@code tokens.removeFirst()}
 	 */
 	private Token expectType(TokenType tokenType, String errorMessage) {
 		final Token previous = tokens.removeFirst();
@@ -62,7 +62,18 @@ public class Parser {
 	}
 
 	private Expression parseExpression() {
-		return parseAdditiveExpression();
+		return parseAssignmentExpression();
+	}
+
+	private Expression parseAssignmentExpression() {
+		Expression left = parseAdditiveExpression();
+
+		if (tokens.getFirst().type() == TokenType.Equals) {
+			tokens.removeFirst();
+			Expression value = parseAssignmentExpression(); // Allows chaining like let x = y = 10;
+			return new AssignmentExpression(left, value);
+		}
+		return left;
 	}
 
 	private Statement parseVariableDeclaration() {

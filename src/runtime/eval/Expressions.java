@@ -1,7 +1,9 @@
 package runtime.eval;
 
+import frontend.AssignmentExpression;
 import frontend.BinaryExpression;
 import frontend.Identifier;
+import frontend.NodeType;
 import org.jetbrains.annotations.NotNull;
 import runtime.*;
 
@@ -45,5 +47,14 @@ public class Expressions {
 
 	public RuntimeValue evaluateIdentifier(Identifier identifier, Environment env) {
 		return env.lookupVariable(identifier.symbol());
+	}
+
+	public RuntimeValue evaluateAssignment(AssignmentExpression node, Environment env) {
+		if (node.assignee().kind() != NodeType.Identifier) {
+			System.err.println("Cannot assign value to this type. Given " + node.assignee() + " of type " + node.kind());
+		}
+
+		String varname = ((Identifier) node.assignee()).symbol();
+		return env.assignVariable(varname, interpreter.evaluate(node.value(), env));
 	}
 }

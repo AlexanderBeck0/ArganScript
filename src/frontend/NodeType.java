@@ -5,6 +5,7 @@ public enum NodeType {
 	NumericLiteral,
 	Identifier,
 	BinaryExpression,
+	AssignmentExpression,
 	CallExpression,
 	UnaryExpression,
 	FunctionDeclaration,

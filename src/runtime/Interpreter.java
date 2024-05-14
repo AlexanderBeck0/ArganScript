@@ -22,11 +22,14 @@ public class Interpreter {
 			case BinaryExpression -> {
 				return expressions.evaluateBinaryExpression((BinaryExpression) node, env);
 			}
+			case AssignmentExpression -> {
+				return expressions.evaluateAssignment((AssignmentExpression) node, env);
+			}
 			case Identifier -> {
 				return expressions.evaluateIdentifier((Identifier) node, env);
 			}
 			default -> {
-				System.err.println("This AST value has not been set up yet! AST value given: " + node.kind());
+				System.err.println("This AST value has not been set up in evaluate yet! AST value given: " + node.kind());
 				System.exit(1); //  1 has NO meaning in this case. Feel free to change it.
 			}
 		}
