@@ -12,8 +12,8 @@ public class Interpreter {
 			case NumericLiteral -> {
 				return new NumberValue(((NumericLiteral) node).value());
 			}
-			case NullLiteral -> {
-				return new NullValue();
+			case VariableDeclaration -> {
+				return evaluateVariableDeclaration((VariableDeclaration) node, env);
 			}
 			case BinaryExpression -> {
 				return evaluateBinaryExpression((BinaryExpression) node, env);
@@ -85,5 +85,10 @@ public class Interpreter {
 
 	private RuntimeValue evaluateIdentifier(Identifier identifier, Environment env) {
 		return env.lookupVariable(identifier.symbol());
+	}
+
+	private RuntimeValue evaluateVariableDeclaration(VariableDeclaration node, Environment env) {
+		RuntimeValue value = node.getValue() != null ? evaluate(node.getValue(), env) : new NullValue();
+		return env.declareVariable(node.getIdentifier(), value, node.isConstant());
 	}
 }

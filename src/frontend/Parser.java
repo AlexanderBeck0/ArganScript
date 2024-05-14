@@ -9,7 +9,8 @@ public class Parser {
 	private static ArrayList<Token> tokens;
 
 	/**
-	 * @param tokenType The token type to expect
+	 * @implNote Advances {@link #tokens} by using {@code tokens.removeFirst()}
+	 * @param tokenType    The token type to expect
 	 * @param errorMessage The error message to show if there is no next token type or if the type is not the provdided type
 	 * @return The expected token of the given type, or the system exists.
 	 */
@@ -35,6 +36,7 @@ public class Parser {
 	 *     <li>Unary Expression</li>
 	 *     <li>Primary Expression</li>
 	 * </ol>
+	 *
 	 * @param srcCode The source code to create an Abstract Syntax Tree from
 	 * @return A {@link Program} that's body is the tokenized values from the inputted parameter.
 	 */
@@ -49,11 +51,45 @@ public class Parser {
 	}
 
 	private Statement parseStatement() {
-		return parseExpression();
+		switch (tokens.getFirst().type()) {
+			case Let, Const -> {
+				return parseVariableDeclaration();
+			}
+			default -> {
+				return parseExpression();
+			}
+		}
 	}
 
 	private Expression parseExpression() {
 		return parseAdditiveExpression();
+	}
+
+	private Statement parseVariableDeclaration() {
+		// Gets the type of variable declaration
+		// Note: This will NOT handle any data type declarations, only let and const
+		// Will need to be reimplemented to allow these
+		boolean isConstant = tokens.removeFirst().type() == TokenType.Const;
+		String identifier = expectType(TokenType.Identifier, "Expected a valid identifier, instead got " + tokens.getFirst()).value();
+
+		if (tokens.getFirst().type() == TokenType.Semicolon) {
+			tokens.removeFirst();
+			// Let x;
+			if (isConstant) {
+				// A constant value which is not initialized
+				System.err.println("Constant" + identifier + " must be contain a value!");
+				System.exit(1);
+			}
+			// Initialize value to null
+			return new VariableDeclaration(identifier);
+		}
+
+		// Get equals sign
+		expectType(TokenType.Equals, "Expected equals sign (=), instead found " + tokens.getFirst());
+
+		VariableDeclaration declaration = new VariableDeclaration(identifier, parseAdditiveExpression(), isConstant);
+		expectType(TokenType.Semicolon, "Expected semi-colon after variable declaration, received " + tokens.getFirst() + " instead.");
+		return declaration;
 	}
 
 	private Expression parseAdditiveExpression() {

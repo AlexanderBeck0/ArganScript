@@ -6,9 +6,9 @@ public static void main(String[] args) {
 	Parser parser = new Parser();
 	Interpreter interpreter = new Interpreter();
 	Environment root = new Environment();
-	root.declareVariable("x", new NumberValue(20.0));
-	root.declareVariable("null", new NullValue());
-	root.declareVariable("true", new BooleanValue(true));
-	root.declareVariable("false", new BooleanValue(false));
-	System.out.println(interpreter.evaluate(parser.produceAST("1 + true"), root));
+	root.declareVariable("x", new NumberValue(20.0), false);
+	root.declareVariable("null", new NullValue(), true);
+	root.declareVariable("true", new BooleanValue(true), true);
+	root.declareVariable("false", new BooleanValue(false), true);
+	System.out.println(interpreter.evaluate(parser.produceAST("let y; y"), root));
 }
