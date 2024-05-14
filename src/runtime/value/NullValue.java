@@ -1,4 +1,6 @@
-package runtime;
+package runtime.value;
+
+import runtime.ValueType;
 
 import java.util.Objects;
 

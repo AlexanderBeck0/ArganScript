@@ -1,17 +1,19 @@
-package runtime;
+package runtime.value;
+
+import runtime.ValueType;
 
 import java.util.Objects;
 
-public class NumberValue extends RuntimeValue {
-	private final Double value;
-	private final static ValueType type = ValueType.Number;
+public class BooleanValue extends RuntimeValue {
+	private final boolean value;
+	private final static ValueType type = ValueType.Boolean;
 
-	public NumberValue(Double value) {
+	public BooleanValue(boolean value) {
 		super(type);
 		this.value = value;
 	}
 
-	public Double value() {
+	public boolean value() {
 		return value;
 	}
 
@@ -19,7 +21,7 @@ public class NumberValue extends RuntimeValue {
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
 		if (obj == null || obj.getClass() != this.getClass()) return false;
-		var that = (NumberValue) obj;
+		var that = (BooleanValue) obj;
 		return Objects.equals(this.value, that.value);
 	}
 
@@ -30,7 +32,7 @@ public class NumberValue extends RuntimeValue {
 
 	@Override
 	public String toString() {
-		return "NumberValue[" +
+		return "BooleanValue[" +
 				"value=" + value + ']';
 	}
 

@@ -1,4 +1,7 @@
-package frontend;
+package frontend.statement;
+
+import frontend.Expression;
+import frontend.NodeType;
 
 import java.util.Objects;
 

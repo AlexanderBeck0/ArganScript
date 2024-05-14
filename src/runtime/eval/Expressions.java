@@ -1,11 +1,19 @@
 package runtime.eval;
 
-import frontend.AssignmentExpression;
-import frontend.BinaryExpression;
-import frontend.Identifier;
 import frontend.NodeType;
+import frontend.expression.AssignmentExpression;
+import frontend.expression.BinaryExpression;
+import frontend.literal.Identifier;
+import frontend.literal.ObjectLiteral;
+import frontend.literal.Property;
 import org.jetbrains.annotations.NotNull;
-import runtime.*;
+import runtime.Environment;
+import runtime.Interpreter;
+import runtime.ValueType;
+import runtime.value.NullValue;
+import runtime.value.NumberValue;
+import runtime.value.ObjectValue;
+import runtime.value.RuntimeValue;
 
 public class Expressions {
 	private final Interpreter interpreter;
@@ -56,5 +64,15 @@ public class Expressions {
 
 		String varname = ((Identifier) node.assignee()).symbol();
 		return env.assignVariable(varname, interpreter.evaluate(node.value(), env));
+	}
+
+	public RuntimeValue evaluateObjectExpression(ObjectLiteral obj, Environment env) {
+		ObjectValue object = new ObjectValue();
+		for (Property property : obj.properties()) {
+			RuntimeValue value = property.value() == null ? env.lookupVariable(property.key()) : interpreter.evaluate(property.value(), env);
+			object.properties().put(property.key(), value);
+		}
+
+		return object;
 	}
 }
